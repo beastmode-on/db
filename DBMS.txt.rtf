@@ -1,0 +1,208 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww33400\viewh21000\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 -- DBMS ASSIGNMENT (2)\
+-- 1. Create an Employee table with attributes: Employee ID (Primary key), Name, Department, Age (check >18), Salary, City.\
+CREATE TABLE Employee (\
+    EmployeeID INT PRIMARY KEY,\
+    Name VARCHAR(100),\
+    Department VARCHAR(50),\
+    Age INT CHECK (Age > 18),\
+    Salary DECIMAL(10,2),\
+    City VARCHAR(50)\
+);\
+\
+-- 2. Display the total number of employees.\
+SELECT COUNT(*) AS TotalEmployees FROM Employee;\
+\
+-- 3. Retrieve all information of employees whose age is 22.\
+SELECT * FROM Employee WHERE Age = 22;\
+\
+-- 4. Fetch the employee ID, name, and department, whose salary >= 50000.\
+SELECT EmployeeID, Name, Department FROM Employee WHERE Salary >= 50000;\
+\
+-- 5. Print the name of employees and label the column as "Full Name" for those in 'Finance' department and age 22.\
+SELECT Name AS "Full Name" FROM Employee WHERE Department = 'Finance' AND Age = 22;\
+\
+-- 6. Print department names from the employee table without duplicates.\
+SELECT DISTINCT Department FROM Employee;\
+\
+-- 7. Find the maximum and minimum salary from the employee table.\
+SELECT MAX(Salary) AS MaxSalary, MIN(Salary) AS MinSalary FROM Employee;\
+\
+-- 8. Show the total salary and average salary of all employees.\
+SELECT SUM(Salary) AS TotalSalary, AVG(Salary) AS AverageSalary FROM Employee;\
+\
+-- 9. Show details of employees with the same salary.\
+SELECT * FROM Employee WHERE Salary IN (\
+    SELECT Salary FROM Employee GROUP BY Salary HAVING COUNT(*) > 1\
+);\
+\
+-- 10. Display employee names from lowest to highest salary.\
+SELECT Name FROM Employee ORDER BY Salary ASC;\
+\
+-- 11. Display employee name and salary (department-wise) for employees with salary >= 10000 and age > 25\
+SELECT Name, Salary, Department FROM Employee WHERE Salary >= 10000 AND Age > 25 ORDER BY Department;\
+\
+-- DBMS ASSIGNMENT\
+\
+-- 1. Write a query to create a table named Music.Artists with columns:\
+--    ArtistId (integer, primary key, auto-increment, not null), ArtistName (varchar(255), not null)\
+CREATE TABLE Music_Artists (\
+    ArtistId INT PRIMARY KEY AUTO_INCREMENT,\
+    ArtistName VARCHAR(255) NOT NULL\
+);\
+\
+-- 2. Write the statement to delete all rows from a table called Artists without deleting the table structure.\
+DELETE FROM Artists;\
+\
+-- 3. Write the query to delete the entire table Artists.\
+DROP TABLE Artists;\
+\
+-- 4. Write the query to add a new column called city (char(20)) to the table employee.\
+ALTER TABLE Employee ADD city CHAR(20);\
+\
+-- 5. Write the query to modify the column name in the table brands to VARCHAR(255).\
+ALTER TABLE brands MODIFY COLUMN name VARCHAR(255);\
+\
+-- 6. Write the query to rename emergency_contact to contact in student data, with data type varchar(10).\
+ALTER TABLE student_data CHANGE COLUMN emergency_contact contact VARCHAR(10);\
+\
+-- 7. Write the query to rename the table students to student_123.\
+ALTER TABLE students RENAME TO student_123;\
+\
+-- 8. Write the query to insert a single record into the Patient table.\
+INSERT INTO Patient (Surname, FirstName, DOB, Gender, Weight, Height, Vaccinated) VALUES ('Smith', 'John', '1990-01-01', 'M', 70, 175, 'Yes');\
+\
+-- 9. Write the query to insert two records into the Patient table in a single statement.\
+INSERT INTO Patient (Surname, FirstName, DOB, Gender, Weight, Height, Vaccinated)\
+VALUES ('Doe', 'Jane', '1992-02-02', 'F', 65, 165, 'No'), ('Lee', 'Alex', '1985-03-03', 'M', 80, 180, 'Yes');\
+\
+-- 10. Write an UPDATE query to change the UnitId to 2 where FruitName is 'Apple' and UnitId is 1 in the Fruit table.\
+UPDATE Fruit SET UnitId = 2 WHERE FruitName = 'Apple' AND UnitId = 1;\
+\
+-- 11. Write an UPDATE query to change the GroupName from 'Ward' to 'Room' in the Department table.\
+UPDATE Department SET GroupName = 'Room' WHERE GroupName = 'Ward';\
+\
+-- 12. Write a query to delete a record from the GEHU_EMPLOYEES table where NAME is 'Kunal'.\
+DELETE FROM GEHU_EMPLOYEES WHERE NAME = 'Kunal';\
+\
+-- 13. Write a query to delete all records from the employees table.\
+DELETE FROM employees;\
+\
+-- 14. Write a GRANT statement to give SELECT and UPDATE permissions on MY_TABLE to users SOME_USER and ANOTHER_USER.\
+GRANT SELECT, UPDATE ON MY_TABLE TO SOME_USER, ANOTHER_USER;\
+\
+-- 15. Write a REVOKE statement to withdraw SELECT and UPDATE permissions on MY_TABLE from users USER1 and USER2.\
+REVOKE SELECT, UPDATE ON MY_TABLE FROM USER1, USER2;\
+\
+-- 16. Write a query to select columns column1 and column2 from table_name.\
+SELECT column1, column2 FROM table_name;\
+\
+-- 17. Write a query to select all columns from table_name.\
+SELECT * FROM table_name;\
+\
+-- 18. Write the statement to begin a transaction.\
+BEGIN TRANSACTION;\
+\
+-- 19. Write the statement to commit a transaction.\
+COMMIT;\
+\
+-- 20. Write the statement to rollback a transaction.\
+ROLLBACK;\
+\
+-- 21. Write the statement to create a savepoint named SAVEPOINT_NAME.\
+SAVEPOINT SAVEPOINT_NAME;\
+\
+-- DBMS LAB ASSIGNMENT-1\
+\
+-- 1(i). Create EMPLOYEE Table\
+CREATE TABLE EMPLOYEE (\
+    Empno VARCHAR2(6) PRIMARY KEY,\
+    Ename VARCHAR2(20) NOT NULL,\
+    Job CHAR(10),\
+    Hiredate DATE,\
+    Basic_Sal DECIMAL(9,2),\
+    Comm DECIMAL(7,2),\
+    Dept_no VARCHAR(4)\
+);\
+\
+-- 1(ii). Create DEPARTMENT Table\
+CREATE TABLE DEPARTMENT (\
+    Deptno VARCHAR2(8),\
+    Dname VARCHAR2(20),\
+    Loc VARCHAR2(20)\
+);\
+\
+-- 1(iii). Create Client_Mast Table\
+CREATE TABLE Client_Mast (\
+    Client_no VARCHAR2(6) PRIMARY KEY,\
+    Name VARCHAR2(20) NOT NULL,\
+    Address VARCHAR2(25),\
+    City VARCHAR2(20),\
+    Pincode VARCHAR2(6),\
+    State VARCHAR2(15),\
+    Bal_due DECIMAL(8,2)\
+);\
+\
+-- 1(iv). Create Product_Mast Table\
+CREATE TABLE Product_Mast (\
+    Product_no VARCHAR2(6),\
+    Description VARCHAR2(14),\
+    Profit_perc DECIMAL(5,2),\
+    Units VARCHAR2(10),\
+    Qty_Available INT,\
+    Sell_Price DECIMAL(7,2),\
+    Cost_Price DECIMAL(7,2)\
+);\
+\
+-- 1(v). Create Salesman_Mast Table\
+CREATE TABLE Salesman_Mast (\
+    Salesman_no VARCHAR2(10),\
+    Name VARCHAR2(20) NOT NULL,\
+    Address VARCHAR2(20),\
+    City VARCHAR2(18),\
+    Pincode INT,\
+    State VARCHAR2(15),\
+    Sal_Amount DECIMAL(8,2),\
+    Target DECIMAL(5,2)\
+);\
+\
+-- 1(i). Insert sample records into EMPLOYEE table\
+INSERT INTO EMPLOYEE VALUES ('E0001','Kim','Manager',TO_DATE('15-12-2002','DD-MM-YYYY'),2500,250,'D004');\
+INSERT INTO EMPLOYEE VALUES ('E0002','Bruce','Analyst',TO_DATE('24-04-2000','DD-MM-YYYY'),5000,500,'D001');\
+INSERT INTO EMPLOYEE VALUES ('E0003','Arnold','Clerk',TO_DATE('10-01-2001','DD-MM-YYYY'),4000,400,'D002');\
+INSERT INTO EMPLOYEE VALUES ('E0004','Holyfield','Tester',TO_DATE('10-10-2001','DD-MM-YYYY'),3000,300,'D003');\
+INSERT INTO EMPLOYEE VALUES ('E0005','Kelly','Admin',TO_DATE('11-04-2003','DD-MM-YYYY'),2000,200,'D005');\
+\
+-- 1(ii). Insert sample records into DEPARTMENT table\
+INSERT INTO DEPARTMENT VALUES ('D001','Development','Noida');\
+INSERT INTO DEPARTMENT VALUES ('D002','R & D','Rocky Creek');\
+INSERT INTO DEPARTMENT VALUES ('D003','Admin','Seattle');\
+INSERT INTO DEPARTMENT VALUES ('D004','Accounts','Seattle');\
+INSERT INTO DEPARTMENT VALUES ('D005','Production','Noida');\
+\
+-- 1(iii). Insert sample records into Client_Mast table\
+INSERT INTO Client_Mast VALUES ('B001','BMW','6,Rocky Creek','Jacksonville','1234','Florida',3488);\
+INSERT INTO Client_Mast VALUES ('B002','Procurez','12,Sunbay Street','Gainesville','1233','Florida',3500);\
+INSERT INTO Client_Mast VALUES ('B003','Teoco','1234,Princiton circle','Fairfax','3433','Virginia',4433);\
+INSERT INTO Client_Mast VALUES ('B004','ASAP','23,North City','Puria','4354','Illinois',3600);\
+INSERT INTO Client_Mast VALUES ('B005','Takenote','7,Hudson Bay','Puria','6454','Illinois',4555);\
+\
+-- 1(iv). Insert sample records into Product_Mast table\
+INSERT INTO Product_Mast VALUES ('PR023','CD Player',5,'Piece',100,210,200);\
+INSERT INTO Product_Mast VALUES ('PR045','Television',10,'Piece',35,1320,1200);\
+INSERT INTO Product_Mast VALUES ('PR055','Refrigerator',15,'Piece',60,920,800);\
+INSERT INTO Product_Mast VALUES ('PR065','Oven',12,'Piece',40,504,450);\
+INSERT INTO Product_Mast VALUES ('PR075','Microwave',20,'Piece',100,900,750);\
+\
+-- 1(v). Insert sample records into Salesman_Mast table\
+INSERT INTO Salesman_Mast VALUES ('SA001','Sammy','43, NW','Jackson',1234,'Florida',2500,200);\
+INSERT INTO Salesman_Mast VALUES ('SA002','Aron','2,Avenue','Gaines',1233,'Florida',2500,200);\
+INSERT INTO Salesman_Mast VALUES ('SA003','Quincy','2,Moon App','Janes',1235,'Florida',2500,200);\
+INSERT INTO Salesman_Mast VALUES ('SA004','Teddy','3,Silver-spoons','Harry',1233,'Tennessee',2300,200);\
+INSERT INTO Salesman_Mast VALUES ('SA005','Byron','4, St. Street','Ville',12,'Illinois',3500,100);}

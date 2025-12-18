@@ -1,0 +1,332 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2867
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 -- =========================\
+-- WEEK 1\
+-- =========================\
+\
+CREATE DATABASE hospital_db;\
+USE hospital_db;\
+\
+-- Wards Table\
+CREATE TABLE wards (\
+    ward_id INT PRIMARY KEY,\
+    ward_name VARCHAR(50),\
+    capacity INT\
+);\
+\
+-- Doctors Table\
+CREATE TABLE doctors (\
+    doctor_id INT PRIMARY KEY,\
+    doctor_name VARCHAR(50),\
+    specialization VARCHAR(50)\
+);\
+\
+-- Patients Table\
+CREATE TABLE patients (\
+    patient_id INT PRIMARY KEY,\
+    patient_name VARCHAR(50),\
+    age INT,\
+    ward_id INT,\
+    FOREIGN KEY (ward_id) REFERENCES wards(ward_id)\
+);\
+\
+-- Bills Table\
+CREATE TABLE bills (\
+    bill_id INT PRIMARY KEY,\
+    patient_id INT,\
+    amount DECIMAL(10,2),\
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id)\
+);\
+\
+-- Appointments Table\
+CREATE TABLE appointments (\
+    appointment_id INT PRIMARY KEY,\
+    patient_id INT,\
+    doctor_id INT,\
+    date DATE,\
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id),\
+    FOREIGN KEY (doctor_id) REFERENCES doctors(doctor_id)\
+);\
+\
+-- Insert Random Data\
+INSERT INTO wards VALUES (1,'General',30),(2,'ICU',10);\
+INSERT INTO doctors VALUES (101,'Dr. Rao','Cardiology'),(102,'Dr. Mehta','Orthopedic');\
+INSERT INTO patients VALUES (201,'Amit',25,1),(202,'Neha',30,2);\
+INSERT INTO bills VALUES (301,201,5000),(302,202,12000);\
+INSERT INTO appointments VALUES (401,201,101,'2024-01-01');\
+\
+-- UPDATE using ALTER\
+ALTER TABLE patients ADD gender VARCHAR(10);\
+\
+-- DELETE example\
+DELETE FROM appointments WHERE appointment_id=401;\
+\
+-- DROP example\
+DROP TABLE bills;\
+\uc0\u55357 \u56633  WEEK 2 \'96 USER, GRANT, REVOKE, TRANSACTION, CONSTRAINTS\
+-- =========================\
+-- WEEK 2\
+-- =========================\
+\
+CREATE USER 'labuser'@'localhost' IDENTIFIED BY 'lab123';\
+GRANT SELECT, INSERT ON hospital_db.* TO 'labuser'@'localhost';\
+REVOKE INSERT ON hospital_db.* FROM 'labuser'@'localhost';\
+\
+-- TRANSACTION & ROLLBACK\
+START TRANSACTION;\
+INSERT INTO wards VALUES (3,'Emergency',20);\
+ROLLBACK;\
+\
+-- Constraints\
+ALTER TABLE doctors\
+ADD email VARCHAR(50) UNIQUE,\
+ADD experience INT CHECK (experience > 0);\
+\
+-- Try NULL insert\
+INSERT INTO doctors (doctor_id,doctor_name) VALUES (103,'Raj'); -- ERROR\
+\uc0\u55357 \u56633  WEEK 3 \'96 EMPLOYEE TABLE & BASIC QUERIES\
+-- =========================\
+-- WEEK 3\
+-- =========================\
+\
+CREATE TABLE employee (\
+    emp_id INT PRIMARY KEY,\
+    name VARCHAR(50),\
+    department VARCHAR(50),\
+    age INT CHECK (age > 18),\
+    salary INT,\
+    city VARCHAR(50)\
+);\
+\
+INSERT INTO employee VALUES\
+(2001,'Aman','Finance',22,50000,'Delhi'),\
+(2002,'Ravi','CSE',25,60000,'Pune'),\
+(2003,'Neha','Finance',22,45000,'Delhi'),\
+(2004,'Sita','HR',30,30000,'Mumbai');\
+\
+-- Total employees\
+SELECT COUNT(*) FROM employee;\
+\
+-- Age 22\
+SELECT * FROM employee WHERE age=22;\
+\
+-- Salary >= 50000\
+SELECT emp_id,name,department FROM employee WHERE salary>=50000;\
+\
+-- Alias\
+SELECT name AS "Full Name" FROM employee\
+WHERE department='Finance' AND age=22;\
+\
+-- Distinct departments\
+SELECT DISTINCT department FROM employee;\
+\uc0\u55357 \u56633  WEEK 4 \'96 AGGREGATE FUNCTIONS\
+-- =========================\
+-- WEEK 4\
+-- =========================\
+\
+SELECT MAX(salary), MIN(salary) FROM employee;\
+SELECT SUM(salary), AVG(salary) FROM employee;\
+\
+-- Same salary\
+SELECT * FROM employee\
+WHERE salary IN (\
+    SELECT salary FROM employee GROUP BY salary HAVING COUNT(*)>1\
+);\
+\
+-- Order salary\
+SELECT name FROM employee ORDER BY salary;\
+\
+-- Department-wise\
+SELECT name,salary FROM employee\
+WHERE salary>=10000 AND age>25\
+ORDER BY department;\
+\uc0\u55357 \u56633  WEEK 5 \'96 IN, ANY, ALL, EXISTS\
+-- =========================\
+-- WEEK 5\
+-- =========================\
+\
+SELECT * FROM employee WHERE city IN ('Delhi','Pune');\
+\
+SELECT name,department FROM employee\
+WHERE emp_id BETWEEN 2001 AND 2005;\
+\
+SELECT name FROM employee\
+WHERE city IN (SELECT city FROM employee);\
+\
+-- ALL\
+SELECT * FROM employee\
+WHERE city = ALL (SELECT city FROM employee);\
+\
+-- ANY\
+SELECT * FROM employee\
+WHERE city = ANY (SELECT city FROM employee);\
+\
+-- EXISTS\
+SELECT * FROM employee e\
+WHERE EXISTS (SELECT 1 FROM employee WHERE city=e.city);\
+\uc0\u55357 \u56633  WEEK 6 \'96 LIKE & PATTERN MATCHING\
+-- =========================\
+-- WEEK 6\
+-- =========================\
+\
+SELECT * FROM employee WHERE department='CSE';\
+SELECT name FROM employee WHERE name LIKE 'ay%';\
+SELECT name,department FROM employee WHERE name LIKE '%sh';\
+SELECT name,department FROM employee WHERE city LIKE 'D%' OR city LIKE '%h';\
+SELECT * FROM employee WHERE salary>15000 AND name LIKE 'h%';\
+SELECT name FROM employee WHERE name LIKE '___';\
+SELECT name,city FROM employee WHERE name LIKE '_____%' ;\
+\uc0\u55357 \u56633  WEEK 7 \'96 JOINS\
+-- =========================\
+-- WEEK 7\
+-- =========================\
+\
+CREATE TABLE department (\
+    dept_id INT PRIMARY KEY,\
+    dept_name VARCHAR(50)\
+);\
+\
+ALTER TABLE employee ADD dept_id INT;\
+UPDATE employee SET dept_id=1 WHERE department='Finance';\
+UPDATE employee SET dept_id=2 WHERE department='CSE';\
+\
+INSERT INTO department VALUES (1,'Finance'),(2,'CSE'),(3,'HR');\
+\
+-- Inner Join\
+SELECT e.name,d.dept_name\
+FROM employee e\
+JOIN department d ON e.dept_id=d.dept_id;\
+\
+-- Left Join\
+SELECT e.name,d.dept_name\
+FROM employee e\
+LEFT JOIN department d ON e.dept_id=d.dept_id;\
+\
+-- Right Join\
+SELECT e.name,d.dept_name\
+FROM employee e\
+RIGHT JOIN department d ON e.dept_id=d.dept_id;\
+\
+-- Age > 30\
+SELECT d.dept_name,e.name\
+FROM employee e JOIN department d\
+ON e.dept_id=d.dept_id\
+WHERE age>30;\
+\uc0\u55357 \u56633  WEEK 8 \'96 CUSTOMER & ORDER, FULL JOIN, CROSS JOIN\
+-- =========================\
+-- WEEK 8\
+-- =========================\
+\
+CREATE TABLE customer (\
+    customer_id INT PRIMARY KEY,\
+    name VARCHAR(50) NOT NULL,\
+    age INT,\
+    address VARCHAR(100),\
+    city VARCHAR(50)\
+);\
+\
+CREATE TABLE orders (\
+    order_id INT,\
+    customer_id INT,\
+    date DATE\
+);\
+\
+-- Full Join (MySQL alternative)\
+SELECT * FROM customer\
+LEFT JOIN orders ON customer.customer_id=orders.customer_id\
+UNION\
+SELECT * FROM customer\
+RIGHT JOIN orders ON customer.customer_id=orders.customer_id;\
+\
+-- Cross Join\
+SELECT c.name,o.order_id\
+FROM customer c CROSS JOIN orders o;\
+\uc0\u55357 \u56633  WEEK 9 \'96 STUDENT, PROGRAM, REGISTER\
+-- =========================\
+-- WEEK 9\
+-- =========================\
+\
+CREATE TABLE student (\
+    roll_no INT PRIMARY KEY,\
+    name VARCHAR(50) NOT NULL,\
+    city VARCHAR(50)\
+);\
+\
+CREATE TABLE program (\
+    program_id INT PRIMARY KEY,\
+    program_name VARCHAR(50) NOT NULL,\
+    fee INT CHECK (fee>=10000),\
+    department VARCHAR(50)\
+);\
+\
+CREATE TABLE register (\
+    roll_no INT,\
+    program_id INT,\
+    PRIMARY KEY (roll_no,program_id)\
+);\
+\
+-- MCA students\
+SELECT s.* FROM student s\
+JOIN register r ON s.roll_no=r.roll_no\
+JOIN program p ON r.program_id=p.program_id\
+WHERE p.program_name='MCA';\
+\
+-- Not registered\
+SELECT * FROM student\
+WHERE roll_no NOT IN (SELECT roll_no FROM register);\
+\uc0\u55357 \u56633  WEEK 10 \'96 Nth SALARY & SUBQUERIES\
+-- =========================\
+-- WEEK 10\
+-- =========================\
+\
+-- 2nd Minimum Salary\
+SELECT MIN(salary)\
+FROM employee\
+WHERE salary > (SELECT MIN(salary) FROM employee);\
+\
+-- 3rd Maximum Salary\
+SELECT MAX(salary)\
+FROM employee\
+WHERE salary < (\
+    SELECT MAX(salary)\
+    FROM employee\
+    WHERE salary < (SELECT MAX(salary) FROM employee)\
+);\
+\
+-- Above department avg\
+SELECT name,salary FROM employee e\
+WHERE salary > (\
+    SELECT AVG(salary)\
+    FROM employee\
+    WHERE dept_id=e.dept_id\
+);\
+\uc0\u55357 \u56633  WEEK 11 \'96 TRIGGERS\
+-- =========================\
+-- WEEK 11\
+-- =========================\
+\
+DELIMITER //\
+\
+CREATE TRIGGER emp_salary_trigger\
+BEFORE UPDATE ON employee\
+FOR EACH ROW\
+BEGIN\
+    SELECT NEW.salary - OLD.salary AS salary_difference;\
+    SET NEW.name = UPPER(NEW.name);\
+END;\
+//\
+DELIMITER ;\
+\
+-- Insert test\
+INSERT INTO employee VALUES (2005,'rohit','HR',28,40000,'Delhi',3);\
+\
+-- Update test\
+UPDATE employee SET salary=45000 WHERE emp_id=2005;\
+\
+-- Delete test\
+DELETE FROM employee WHERE emp_id=2005;}
